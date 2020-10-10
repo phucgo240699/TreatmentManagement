@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.zhdhp.mongodb.net/dbOne?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true }
   )
   .then(result => {
     console.log("Database connected successfully");
