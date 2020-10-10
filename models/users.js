@@ -35,11 +35,11 @@ const Users = new Schema(
       required: true,
       minlength: 8
     },
-    roles: {
+    role: {
       type: String,
       required: true,
-      enum: ["admin", "doctor", "pharmacist", "staff", "patient"],
-      default: "patient"
+      enum: ["admin", "doctor", "pharmacist", "staff"],
+      default: "staff"
     },
     isDeleted: {
       type: Boolean,
