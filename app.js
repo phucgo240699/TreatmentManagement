@@ -5,6 +5,9 @@ const cors = require("cors")
 const dotenv = require("dotenv");
 const helmet = require('helmet');
 
+
+const { authenticateToken } = require("./services/authenticationToken")
+
 dotenv.config()
 
 const port = process.env.PORT || 3001
@@ -14,8 +17,14 @@ app.use(helmet())
 app.use(cors())
 app.use(bodyParser.json())
 
-app.use("/medicinecategories",require("./routes/medicinecategories"));
-app.use("/medicines",require("./routes/medicines"));
+// Routes
+app.use("/medicine-categories", authenticateToken, require("./routes/medicinecategories"));
+app.use("/medicines", authenticateToken, require("./routes/medicines"));
+app.use("/users", require("./routes/users"))
+
+
+
+
 
 mongoose
   .connect(
