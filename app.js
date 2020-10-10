@@ -14,6 +14,9 @@ app.use(helmet())
 app.use(cors())
 app.use(bodyParser.json())
 
+app.use("/medicinecategories",require("./routes/medicinecategories"));
+app.use("/medicines",require("./routes/medicines"));
+
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.zhdhp.mongodb.net/dbOne?retryWrites=true&w=majority`,
