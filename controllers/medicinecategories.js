@@ -1,5 +1,5 @@
 
-const MedicineCategories = require("../model/medicinecategories");
+const MedicineCategories = require("../models/medicinecategories");
 const { isEmpty, pick } = require("lodash");
 const { model, startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../services/transaction");

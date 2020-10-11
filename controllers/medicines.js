@@ -1,4 +1,4 @@
-const Medicine = require("../model/medicines");
+const Medicine = require("../models/medicines");
 const { isEmpty, pick } = require("lodash");
 const { model, startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../services/transaction");

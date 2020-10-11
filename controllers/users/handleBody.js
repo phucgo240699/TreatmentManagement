@@ -15,7 +15,8 @@ const handleBody = (body) => {
       "phoneNumber", 
       "departmentId", 
       "username", 
-      "password") 
+      "password",
+      "role") 
     }
   }
 } // for newDoc
