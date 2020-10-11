@@ -1,7 +1,7 @@
 
 const MedicineCategories = require("../models/medicinecategories");
 const { isEmpty, pick } = require("lodash");
-const { model, startSession } = require("mongoose");
+const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../services/transaction");
 
 exports.create = async (req, res, next) => {

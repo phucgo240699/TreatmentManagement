@@ -9,7 +9,6 @@ const authenticateToken = async (req, res, next) => {
       if (err) {
         return res.json({ success: false, error: err.message });
       }
-
       const user = await mongoose
         .model("users")
         .findOne({ _id: decoded.username, isDeleted: false });
