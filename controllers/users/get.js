@@ -14,6 +14,7 @@ const get = async (req, res) => {
     const query = { _id: req.params.id, isDeleted: false }
 
     const doc = await Users.findOne(query)
+      .populate("departmentId")
 
     return res.status(200).json({
       success: true,

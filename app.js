@@ -30,6 +30,8 @@ app.use("/users", require("./routes/users"))
 
 
 
+app.use("/faculties", require("./routes/faculties"))
+
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.zhdhp.mongodb.net/dbOne?retryWrites=true&w=majority`,

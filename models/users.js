@@ -23,6 +23,7 @@ const Users = new Schema(
     },
     departmentId: {
       type: Schema.Types.ObjectId,
+      ref: "faculties",
       index: true
     },
     username: {
