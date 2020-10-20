@@ -53,7 +53,7 @@ exports.create = async (req, res, next) => {
         const oldPatient = await Patient.find({
             name: name,
             isDeleted: false
-        });
+        },null,{session});
 
 
         if (oldPatient.length > 0) {
@@ -166,7 +166,7 @@ exports.update = async (req, res, next) => {
         if (req.body.name) {
             let isChangeName = true;
             const [patients, beforeUpdated] = await Promise.all([
-                Patient.find({ name: req.body.name, isDeleted: false }),
+                Patient.find({ name: req.body.name, isDeleted: false },null,{session}),
                 Patient.findOne({
                     _id: req.params.id,
                     isDeleted: false
@@ -177,7 +177,7 @@ exports.update = async (req, res, next) => {
                 isChangeName = false;
             }
 
-            if (patients.length > 0 && isChangeName) {
+            if (patients.length > 1 && isChangeName) {
                 await abortTransactions(sessions);
                 return res.status(409).json({
                     success: false,

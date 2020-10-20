@@ -1,5 +1,5 @@
 const Medicine = require("../models/medicines");
-const { isEmpty, pick } = require("lodash");
+const { isEmpty, pick, before } = require("lodash");
 const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../services/transaction");
 const { json } = require("body-parser");
@@ -58,7 +58,7 @@ exports.create = async (req, res, next) => {
         const oldMedicine = await Medicine.find({
             name: name,
             isDeleted: false
-        });
+        },null,{session});
 
 
         if (oldMedicine.length > 0) {
@@ -193,18 +193,21 @@ exports.update = async (req, res, next) => {
         if (req.body.name) {
             let isChangeName = true;
             const [medicines, beforeUpdated] = await Promise.all([
-                medicines.find({ name: req.body.name, isDeleted: false }),
-                medicines.findOne({
+                Medicine.find({ name: req.body.name, isDeleted: false },null,{session}),
+                Medicine.findOne({
                     _id: req.params.id,
                     isDeleted: false
                 })
             ]);
 
+            console.log(medicines);
+            console.log(beforeUpdated);
+
             if (beforeUpdated.name === updateMedicine.name) {
                 isChangeName = false;
             }
 
-            if (medicines.length > 0 && isChangeName) {
+            if (medicines.length > 1 && isChangeName) {
                 await abortTransactions(sessions);
                 return res.status(409).json({
                     success: false,

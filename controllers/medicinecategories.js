@@ -45,10 +45,10 @@ exports.create = async (req, res, next) => {
     const oldMedicineCategories = await MedicineCategories.find({
       name: name,
       isDeleted: false
-    });
+    },null,{session});
 
 
-    if (oldMedicineCategories.length > 0) {
+    if (oldMedicineCategories.length > 1) {
       await abortTransactions(sessions);
       return res.status(409).json({
         success: false,
@@ -152,7 +152,7 @@ exports.update = async (req, res, next) => {
     if (req.body.name) {
       let isChangeName = true;
       const [medicinecategories, beforeUpdated] = await Promise.all([
-        MedicineCategories.find({ name: req.body.name, isDeleted: false }),
+        MedicineCategories.find({ name: req.body.name, isDeleted: false },null,{session}),
         MedicineCategories.findOne({
           _id: req.params.id,
           isDeleted: false
@@ -163,7 +163,7 @@ exports.update = async (req, res, next) => {
         isChangeName = false;
       }
 
-      if (medicinecategories.length > 0 && isChangeName) {
+      if (medicinecategories.length > 1 && isChangeName) {
         await abortTransactions(sessions);
         return res.status(409).json({
           success: false,

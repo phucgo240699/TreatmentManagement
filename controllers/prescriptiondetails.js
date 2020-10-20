@@ -51,10 +51,10 @@ exports.create = async (req, res, next) => {
             prescriptionId: prescriptionId,
             medicineId: medicineId,
             isDeleted: false
-        });
+        },null,{session});
 
 
-        if (oldPrescriptiondetails.length > 0) {
+        if (oldPrescriptiondetails.length > 1) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,
@@ -163,7 +163,7 @@ exports.update = async (req, res, next) => {
         if (req.body.medicineId) {
             let isChangemedicine = true;
             const [prescriptiondetails, beforeUpdated] = await Promise.all([
-                Prescriptiondetails.find({ medicineId: req.body.medicineId, isDeleted: false }),
+                Prescriptiondetails.find({ medicineId: req.body.medicineId, isDeleted: false },null,{session}),
                 Prescriptiondetails.findOne({
                     _id: req.params.id,
                     isDeleted: false
@@ -174,7 +174,7 @@ exports.update = async (req, res, next) => {
                 isChangemedicine = false;
             }
 
-            if (prescriptiondetails.length > 0 && isChangemedicine) {
+            if (prescriptiondetails.length > 1 && isChangemedicine) {
                 await abortTransactions(sessions);
                 return res.status(409).json({
                     success: false,
