@@ -1,19 +1,17 @@
-const Users = require("../../models/users")
-const { handleBody } = require("./handleBody")
+const Faculties = require("../../models/Faculties")
+const { handleBody } = require('./handleBody')
 const { startSession } = require('mongoose')
-const bcrypt = require("bcrypt");
 const { commitTransactions, abortTransactions } = require('../../services/transaction')
 
-const create = async (req, res) => {
+const update = async (req, res) => {
   let sessions = []
   try {
-    const query = { 
-      $or: [
-        {phoneNumber: req.body.phoneNumber},
-        {username: req.body.phoneNumber},
-      ],
+    const queryOld = { 
+      name: req.body.name,
       isDeleted: false
     } // for oldDocs
+
+    const queryUpdate = { _id: req.params.id, isDeleted: false }
 
     // Handle data
     const { error, body} = handleBody(req.body) // for newDoc
@@ -29,22 +27,15 @@ const create = async (req, res) => {
     session.startTransaction();
     sessions.push(session);
 
-    // Hash password
-    if (body.password != null) {
-      body.password = await bcrypt.hashSync(body.password, 10);
-    }
-
-    // Access DB
-    const [oldDocs, newDoc] = await Promise.all([
-      Users.find(query),
-      Users.create(
-        [body],
-        { session: session }
-      )
-    ])
+    const updated = await Faculties.findOneAndUpdate(
+      queryUpdate,
+      body,
+      { session, new: true }
+    )
     
     // Check duplicate
-    if (oldDocs.length > 0) {
+    const oldDocs = await Faculties.find(queryOld, null, { session })
+    if (oldDocs.length > 1) {
       await abortTransactions(sessions)
       return res.status(406).json({
         success: false,
@@ -52,19 +43,18 @@ const create = async (req, res) => {
       })
     }
 
-    // Success
+    // Updated Successfully
     await commitTransactions(sessions)
     return res.status(200).json({
       success: true,
-      data: newDoc
-    });
+      data: updated
+    })
   } catch (error) {
-    await abortTransactions(sessions)
     return res.status(500).json({
       success: false,
       error: error.message
-    });
+    })
   }
 }
 
-module.exports = { create }
+module.exports = { update }
