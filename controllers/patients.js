@@ -1,5 +1,5 @@
-const Medicine = require("../models/medicines");
-const { isEmpty, pick, before } = require("lodash");
+const Patient = require("../models/patients");
+const { isEmpty, pick } = require("lodash");
 const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../services/transaction");
 const { json } = require("body-parser");
@@ -8,13 +8,11 @@ exports.create = async (req, res, next) => {
     let sessions = [];
     try {
         const name = req.body.name;
-        const price = req.body.price;
-        const quantity = req.body.quantity;
-        const brand = req.body.brand;
-        const categoryId = req.body.medicinecategoriesId;
-        const unit = req.body.unit;
+        const birthday = req.body.birthday;
+        const address = req.body.address;
+        const phoneNumber = req.body.phoneNumber;
         // Check not enough property
-        if (isEmpty(name) || isEmpty(brand) || isEmpty(categoryId) || !price || !quantity || isEmpty(unit)) {
+        if (isEmpty(name) || isEmpty(birthday) || isEmpty(address) || isEmpty(phoneNumber)) {
             return res.status(406).json({
                 success: false,
                 error: "Not enough property"
@@ -27,26 +25,23 @@ exports.create = async (req, res, next) => {
         sessions.push(session);
 
         //Create
-        const newMedicine = await Medicine.create(
+        const newPatient = await Patient.create(
             [
                 {
                     ...pick(
                         req.body,
                         "name",
-                        "unit",
-                        "price",
-                        "quantity",
-                        "brand",
-                        "medicineId",
-                        "medicinecategoriesId",
-                        "unit"
+                        "birthday",
+                        "address",
+                        "phoneNumber",
+                        "job"
                     )
                 }
             ],
             { session: session }
         );
 
-        if (isEmpty(newMedicine)) {
+        if (isEmpty(newPatient)) {
             await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
@@ -55,17 +50,17 @@ exports.create = async (req, res, next) => {
         }
 
         // Check exist
-        const oldMedicine = await Medicine.find({
+        const oldPatient = await Patient.find({
             name: name,
             isDeleted: false
         },null,{session});
 
 
-        if (oldMedicine.length > 0) {
+        if (oldPatient.length > 0) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,
-                error: "This Medicine Category is already exist"
+                error: "This Patient's record is already exist"
             });
         }
 
@@ -75,7 +70,7 @@ exports.create = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            data: newMedicine[0]
+            data: newPatient[0]
         });
     } catch (error) {
         await abortTransactions(sessions);
@@ -88,9 +83,9 @@ exports.create = async (req, res, next) => {
 
 exports.get = async (req, res, next) => {
     try {
-        const medicine = await Medicine.findOne({ _id: req.params.id, isDeleted: false }).populate("medicinecategoriesId", "name");
+        const patient = await Patient.findOne({ _id: req.params.id, isDeleted: false });
 
-        if (isEmpty(medicine)) {
+        if (isEmpty(patient)) {
             return res.status(404).json({
                 success: false,
                 error: "Not found"
@@ -99,7 +94,7 @@ exports.get = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            data: medicine
+            data: patient
         });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
@@ -110,32 +105,27 @@ exports.getAll = async (req, res, next) => {
     const page = Number(req.query.page); // page index
     const limit = Number(req.query.limit); // limit docs per page
     try {
-        const categoryId = req.body.medicinecategoriesId;
-
-        let medicines;
+        let patients;
         let query = {
-            medicinecategoriseId: categoryId,
-            ...pick(req.body, "name", "quantity", "price", "brand", "unit"),
+            ...pick(req.body, "name", "birthday", "address", "phoneNumber", "job"),
             isDeleted: false
         };
 
         if (!page || !limit) {
-            medicines = await Medicine.find(query)
+            patients = await Patient.find(query)
                 .select(
-                    "name price quantity brand medicinecategoriesId unit"
-                )
-                .populate("medicinecategoriesId", "name");
+                    "name birthday address phoneNumber job "
+                );
         } else {
-            medicines = await Medicine.find(query)
+            patients = await Patient.find(query)
                 .select(
-                    "name price quantity brand medicinecategoriesId unit"
+                    "name birthday address phoneNumber job"
                 )
-                .populate("medicinecategoriesId", "name")
                 .skip(limit * (page - 1))
                 .limit(limit);
         }
 
-        return res.status(200).json({ success: true, data: medicines });
+        return res.status(200).json({ success: true, data: patients });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }
@@ -149,23 +139,22 @@ exports.update = async (req, res, next) => {
         session.startTransaction();
         sessions.push(session);
 
-        const updateMedicine = await Medicine.findOneAndUpdate(
+        const updatePatient = await Patient.findOneAndUpdate(
             { _id: req.params.id, isDeleted: false },
             {
                 ...pick(
                     req.body,
                     "name",
-                    "price",
-                    "quantity",
-                    "brand",
-                    "medicineId",
-                    "unit"
+                    "birthday",
+                    "address",
+                    "phoneNumber",
+                    "job"
                 )
             },
             { session, new: true }
         );
 
-        if (isEmpty(updateMedicine)) {
+        if (isEmpty(updatePatient)) {
             await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
@@ -173,41 +162,22 @@ exports.update = async (req, res, next) => {
             });
         }
 
-        if (Number(req.body.quantity) < 0) {
-            await abortTransactions(session);
-            return res.startSession(406), json({
-                success: false,
-                error: "Quantity is invalid"
-            })
-        }
-
-        if (Number(req.body.price) < 0) {
-            await abortTransactions(session);
-            return res.startSession(406), json({
-                success: false,
-                error: "Price is invalid"
-            })
-        }
-
         // Check exist
         if (req.body.name) {
             let isChangeName = true;
-            const [medicines, beforeUpdated] = await Promise.all([
-                Medicine.find({ name: req.body.name, isDeleted: false },null,{session}),
-                Medicine.findOne({
+            const [patients, beforeUpdated] = await Promise.all([
+                Patient.find({ name: req.body.name, isDeleted: false },null,{session}),
+                Patient.findOne({
                     _id: req.params.id,
                     isDeleted: false
                 })
             ]);
 
-            console.log(medicines);
-            console.log(beforeUpdated);
-
-            if (beforeUpdated.name === updateMedicine.name) {
+            if (beforeUpdated.name === updatePatient.name) {
                 isChangeName = false;
             }
 
-            if (medicines.length > 1 && isChangeName) {
+            if (patients.length > 1 && isChangeName) {
                 await abortTransactions(sessions);
                 return res.status(409).json({
                     success: false,
@@ -221,7 +191,7 @@ exports.update = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            data: updateMedicine
+            data: updatePatient
         });
     } catch (error) {
         await abortTransactions(sessions);
@@ -231,13 +201,13 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
     try {
-        const deletedMedicine = await Medicine.findOneAndUpdate(
+        const deletedPatient = await Patient.findOneAndUpdate(
             { _id: req.params.id, isDeleted: false },
             { isDeleted: true },
             { new: true }
         );
 
-        if (isEmpty(deletedMedicine)) {
+        if (isEmpty(deletedPatient)) {
             return res.status(406).json({
                 success: false,
                 error: "Deleted failed"
@@ -246,7 +216,7 @@ exports.delete = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            data: deletedMedicine
+            data: deletedPatient
         });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });

@@ -20,6 +20,10 @@ app.use(bodyParser.json())
 // Routes
 app.use("/medicine-categories", authenticateToken, require("./routes/medicinecategories"));
 app.use("/medicines", authenticateToken, require("./routes/medicines"));
+app.use("/patients", authenticateToken, require("./routes/patients"));
+app.use("/prescriptions", authenticateToken, require("./routes/prescriptions"));
+app.use("/prescription-details", authenticateToken, require("./routes/prescriptiondetails"));
+app.use("/prescription-bills", authenticateToken, require("./routes/prescriptionbills"));
 app.use("/users", require("./routes/users"))
 
 
