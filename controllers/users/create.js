@@ -11,7 +11,7 @@ const create = async (req, res) => {
     const query = { 
       $or: [
         {phoneNumber: req.body.phoneNumber},
-        {username: req.body.phoneNumber},
+        {username: req.body.username},
       ],
       isDeleted: false
     } // for oldDocs
@@ -36,16 +36,12 @@ const create = async (req, res) => {
     }
 
     // Access DB
-    const [oldDocs, newDoc] = await Promise.all([
-      Users.find(query),
-      Users.create(
-        [body],
-        { session: session }
-      )
-    ])
+    const newDoc = await Users.create( [body], { session: session } )
     
     // Check duplicate
-    if (oldDocs.length > 0) {
+    const oldDocs = await Users.find(query, null, {session})
+    console.log(oldDocs)
+    if (oldDocs.length > 1) {
       await abortTransactions(sessions)
       return res.status(406).json({
         success: false,

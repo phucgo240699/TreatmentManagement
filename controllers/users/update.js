@@ -29,17 +29,16 @@ const update = async (req, res) => {
     session.startTransaction();
     sessions.push(session);
 
-    const [oldDocs, updated] = await Promise.all([
-      Users.find(queryOld),
-      Users.findOneAndUpdate(
-        queryUpdate,
-        body,
-        { session, new: true }
-      )
-    ])
+    const updated = await Users.findOneAndUpdate(
+      queryUpdate,
+      body,
+      { session, new: true }
+    )
     
     // Check duplicate
-    if (oldDocs.length > 0) {
+    const oldDocs = await Users.find(queryOld, null, {session})
+    
+    if (oldDocs.length > 1) {
       await abortTransactions(sessions)
       return res.status(406).json({
         success: false,
