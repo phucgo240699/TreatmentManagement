@@ -1,10 +1,7 @@
 const Prescriptionbill = require("../../models/prescriptionbills");
 const { isEmpty, pick } = require("lodash");
-const { startSession } = require("mongoose");
-const { commitTransactions, abortTransactions } = require("../../services/transaction");
 
 const create = async (req, res) => {
-    let sessions = [];
     try {
         const prescriptionId = req.body.prescriptionId;
         const pharmacistId = req.body.pharmacistId;
@@ -16,10 +13,6 @@ const create = async (req, res) => {
                 error: "Not enough property"
             });
         }
-        // Transactions
-        let session = await startSession();
-        session.startTransaction();
-        sessions.push(session);
 
         //Create
         const newPrescriptionbill = await Prescriptionbill.create(
@@ -32,29 +25,22 @@ const create = async (req, res) => {
                         "into_money"
                     )
                 }
-            ],
-            { session: session }
+            ]
         );
 
         if (isEmpty(newPrescriptionbill)) {
-            await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
                 error: "Created failed"
             });
         }
-        // Check exist
-
-
         // Done
-        await commitTransactions(sessions);
 
         return res.status(200).json({
             success: true,
             data: newPrescriptionbill[0]
         });
     } catch (error) {
-        await abortTransactions(sessions);
         return res.status(500).json({
             success: false,
             error: error.message

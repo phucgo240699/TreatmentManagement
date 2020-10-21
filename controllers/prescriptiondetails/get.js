@@ -6,7 +6,7 @@ const get = async (req, res) => {
     const prescriptiondetail = await Prescriptiondetails.findOne({ _id: req.params.id, isDeleted: false }).populate("prescriptionId", "name").populate("medicineId", "name");
 
     if (isEmpty(prescriptiondetail)) {
-        return res.status(404).json({
+        return res.status(406).json({
             success: false,
             error: "Not found"
         });

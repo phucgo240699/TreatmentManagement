@@ -1,15 +1,15 @@
 const { pick, isEmpty } = require("lodash");
-const { startSession } = require("mongoose");
-const { abortTransactions, commitTransactions } = require("../../services/transaction");
+// const { startSession } = require("mongoose");
+// const { abortTransactions, commitTransactions } = require("../../services/transaction");
 const MedicalDetails = require("../../models/medicaldetails");
 const {storeImage} = require("../../services/storeimage");
 const update = async (req, res) => {
   let sessions = [];
   try {
     // Transactions
-    let session = await startSession();
-    session.startTransaction();
-    sessions.push(session);
+    // let session = await startSession();
+    // session.startTransaction();
+    // sessions.push(session);
 
     // handle images
     var images = []
@@ -53,25 +53,25 @@ const update = async (req, res) => {
         ),
         images:images
       },
-      { session, new: true }
+      {  new: true }
     );
 
     if (isEmpty(updateMedicalDetails)) {
-      await abortTransactions(sessions);
+      // await abortTransactions(sessions);
       return res.status(406).json({
         success: false,
         error: "Updated failed"
       });
     }
     // Done
-    await commitTransactions(sessions);
+    // await commitTransactions(sessions);
 
     return res.status(200).json({
       success: true,
       data: updateMedicalDetails
     });
   } catch (error) {
-    await abortTransactions(sessions);
+    // await abortTransactions(sessions);
     return res.status(500).json({ success: false, error: error.message });
   }
 }

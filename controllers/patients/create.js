@@ -55,7 +55,7 @@ const create = async (req, res) => {
         }, null, { session });
 
 
-        if (oldPatient.length > 0) {
+        if (oldPatient.length > 1) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,

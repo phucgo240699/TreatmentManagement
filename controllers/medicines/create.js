@@ -60,9 +60,9 @@ const create = async (req, res) => {
         }, null, { session });
 
 
-        if (oldMedicine.length > 0) {
+        if (oldMedicine.length > 1) {
             await abortTransactions(sessions);
-            return res.status(409).json({
+            return res.status(406).json({
                 success: false,
                 error: "This Medicine Category is already exist"
             });

@@ -1,7 +1,7 @@
 const MedicalDetails = require("../../models/medicaldetails");
 const { isEmpty, pick } = require("lodash");
-const { startSession } = require("mongoose");
-const { commitTransactions, abortTransactions } = require("../../services/transaction");
+// const { startSession } = require("mongoose");
+// const { commitTransactions, abortTransactions } = require("../../services/transaction");
 const {storeImage} = require("../../services/storeimage");
 const create = async (req, res) => {
     let sessions = [];
@@ -18,9 +18,9 @@ const create = async (req, res) => {
         }
 
         // Transactions
-        let session = await startSession();
-        session.startTransaction();
-        sessions.push(session);
+        // let session = await startSession();
+        // session.startTransaction();
+        // sessions.push(session);
 
         // create list more images
         var images = []
@@ -52,26 +52,26 @@ const create = async (req, res) => {
                     ),
                     images: images
                 }
-            ],
-            { session: session }
+            ]
+            // { session: session }
         );
 
         if (isEmpty(newMedicalDetails)) {
-            await abortTransactions(sessions);
+            // await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
                 error: "Created failed"
             });
         }
         // Done
-        await commitTransactions(sessions);
+        // await commitTransactions(sessions);
 
         return res.status(200).json({
             success: true,
             data: newMedicalDetails[0]
         });
     } catch (error) {
-        await abortTransactions(sessions);
+        // await abortTransactions(sessions);
         return res.status(500).json({
             success: false,
             error: error.message

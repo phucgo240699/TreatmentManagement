@@ -68,7 +68,7 @@ const update = async (req, res) => {
 
       if (medicines.length > 1 && isChangeName) {
         await abortTransactions(sessions);
-        return res.status(409).json({
+        return res.status(406).json({
           success: false,
           error: "This name is already exist"
         });
