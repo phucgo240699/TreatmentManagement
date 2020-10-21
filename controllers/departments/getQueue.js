@@ -1,18 +1,21 @@
-const Faculties = require("../../models/faculties")
+const Departments = require("../../models/departments")
 
-const getAll = async (req, res) => {
+const getQueue = async (req, res) => {
   const page = Number(req.query.page) // page index
   const limit = Number(req.query.limit) // limit docs per page
 
   try {
-    const query = { isDeleted: false }
-
+    const query = { _id: req.params.id, isDeleted: false }
     let docs;
     if (!page || !limit) {
-      docs = await Faculties.find(query)
+      docs = await Departments.find(query)
+      .select("queue -_id")
+      .populate("queue")
     }
     else {
-      docs = await Faculties.find(query)
+      docs = await Departments.find(query)
+      .select("queue -_id")
+      .populate("queue._id")
       .skip(limit * (page - 1))
       .limit(limit)
     }
@@ -28,4 +31,4 @@ const getAll = async (req, res) => {
   }
 }
 
-module.exports = { getAll }
+module.exports = { getQueue }

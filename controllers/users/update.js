@@ -53,6 +53,7 @@ const update = async (req, res) => {
       data: updated
     })
   } catch (error) {
+    await abortTransactions(sessions)
     return res.status(500).json({
       success: false,
       error: error.message

@@ -1,4 +1,4 @@
-const Faculties = require("../../models/Faculties")
+const Faculties = require("../../models/faculties")
 const { handleBody } = require('./handleBody')
 const { startSession } = require('mongoose')
 const { commitTransactions, abortTransactions } = require('../../services/transaction')
@@ -27,6 +27,7 @@ const update = async (req, res) => {
     session.startTransaction();
     sessions.push(session);
 
+    // Access DB
     const updated = await Faculties.findOneAndUpdate(
       queryUpdate,
       body,
@@ -50,6 +51,7 @@ const update = async (req, res) => {
       data: updated
     })
   } catch (error) {
+    await abortTransactions(sessions)
     return res.status(500).json({
       success: false,
       error: error.message

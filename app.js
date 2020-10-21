@@ -31,6 +31,7 @@ app.use("/users", require("./routes/users"))
 
 
 app.use("/faculties", require("./routes/faculties"))
+app.use("/departments", require("./routes/departments"))
 
 mongoose
   .connect(

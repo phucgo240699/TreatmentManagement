@@ -1,10 +1,10 @@
-const Faculties = require("../../models/faculties")
+const Departments = require("../../models/departments")
 
 const get = async (req, res) => {
   try {
     const query = { _id: req.params.id, isDeleted: false }
 
-    const doc = await Faculties.findOne(query)
+    const doc = await Departments.findOne(query)
 
     return res.status(200).json({
       success: true,

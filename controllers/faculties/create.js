@@ -1,4 +1,4 @@
-const Faculties = require("../../models/Faculties")
+const Faculties = require("../../models/faculties")
 const { handleBody } = require("./handleBody")
 const { startSession } = require('mongoose')
 const { commitTransactions, abortTransactions } = require('../../services/transaction')

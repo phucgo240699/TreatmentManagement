@@ -1,4 +1,4 @@
-const Faculties = require("../../models/faculties")
+const Departments = require("../../models/departments")
 
 const getAll = async (req, res) => {
   const page = Number(req.query.page) // page index
@@ -9,12 +9,14 @@ const getAll = async (req, res) => {
 
     let docs;
     if (!page || !limit) {
-      docs = await Faculties.find(query)
+      docs = await Departments.find(query)
+      .populate("facultyId", "name")
     }
     else {
-      docs = await Faculties.find(query)
+      docs = await Departments.find(query)
       .skip(limit * (page - 1))
       .limit(limit)
+      .populate("facultyId", "name")
     }
     return res.status(200).json({
       success: true,

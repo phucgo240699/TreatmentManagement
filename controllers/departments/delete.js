@@ -1,11 +1,11 @@
 const { pick } = require('lodash')
-const Faculties = require("../../models/faculties")
+const Departments = require("../../models/departments")
 
 const _delete = async (req, res) => {
   try {
     const queryDelete = { _id: req.params.id, isDeleted: false }
 
-    const deleted = await Faculties.findOneAndUpdate(
+    const deleted = await Departments.findOneAndUpdate(
         queryDelete,
         { isDeleted: true },
         { new: true }

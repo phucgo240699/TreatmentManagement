@@ -16,6 +16,7 @@ const getAll = async (req, res) => {
       docs = await Users.find(query)
       .skip(limit * (page - 1))
       .limit(limit)
+      .populate("departmentId", "name")
     }
     return res.status(200).json({
       success: true,
