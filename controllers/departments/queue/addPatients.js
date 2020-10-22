@@ -1,4 +1,4 @@
-const Departments = require("../../models/departments")
+const Departments = require("../../../models/departments")
 const { isEmpty }= require("lodash")
 
 const addPatients = async (req, res) => {

@@ -21,9 +21,14 @@ const Users = new Schema(
       required: true,
       index: true
     },
-    departmentId: {
+    facultyId: {
       type: Schema.Types.ObjectId,
       ref: "faculties",
+      index: true
+    },
+    departmentId: {
+      type: Schema.Types.ObjectId,
+      ref: "departments",
       index: true
     },
     username: {

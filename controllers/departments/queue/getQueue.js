@@ -1,4 +1,4 @@
-const Departments = require("../../models/departments")
+const Departments = require("../../../models/departments")
 
 const getQueue = async (req, res) => {
   const page = Number(req.query.page) // page index
