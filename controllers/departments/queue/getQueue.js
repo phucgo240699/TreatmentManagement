@@ -15,7 +15,7 @@ const getQueue = async (req, res) => {
     else {
       docs = await Departments.find(query)
       .select("queue -_id")
-      .populate("queue._id")
+      .populate("queue")
       .skip(limit * (page - 1))
       .limit(limit)
     }

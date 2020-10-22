@@ -13,6 +13,7 @@ const handleBody = (body) => {
       "birthday", 
       "address", 
       "phoneNumber", 
+      "facultyId",
       "departmentId", 
       "username", 
       "password",
