@@ -1,14 +1,16 @@
 const router = require("express").Router();
 const { authenticateToken } = require("../services/authenticationToken")
-const prescriptionsController = require("../controllers/prescriptions");
-
 // const { checkIsAdmin } = require("../services/checkAdmin");
-
+const { create } = require('../controllers/prescription/create')
+const { get } = require('../controllers/prescription/get')
+const { getAll } = require('../controllers/prescription/getAll')
+const { update } = require('../controllers/prescription/update')
+const { _delete } = require('../controllers/prescription/delete')
 // medicinecategorise
-router.post("/", authenticateToken, prescriptionsController.create);
-router.get("/:id", authenticateToken, prescriptionsController.get);
-router.post("/getAll", authenticateToken, prescriptionsController.getAll);
-router.put("/:id", authenticateToken, prescriptionsController.update);
-router.delete("/:id", authenticateToken, prescriptionsController.delete);
+router.post("/", authenticateToken, create);
+router.get("/:id", authenticateToken, get);
+router.post("/getAll", authenticateToken, getAll);
+router.put("/:id", authenticateToken, update);
+router.delete("/:id", authenticateToken, _delete);
 
-module.exports = router;
+module.exports = router

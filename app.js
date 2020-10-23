@@ -1,4 +1,5 @@
 const express = require('express')
+var path = require('path');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors")
@@ -16,7 +17,8 @@ const app = express()
 app.use(helmet())
 app.use(cors())
 app.use(bodyParser.json())
-
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static('images'));
 // Routes
 app.use("/medicine-categories", authenticateToken, require("./routes/medicinecategories"));
 app.use("/medicines", authenticateToken, require("./routes/medicines"));
@@ -24,6 +26,8 @@ app.use("/patients", authenticateToken, require("./routes/patients"));
 app.use("/prescriptions", authenticateToken, require("./routes/prescriptions"));
 app.use("/prescription-details", authenticateToken, require("./routes/prescriptiondetails"));
 app.use("/prescription-bills", authenticateToken, require("./routes/prescriptionbills"));
+app.use("/medical-records",authenticateToken,require("./routes/medicalrecords"));
+app.use("/medical-details",authenticateToken,require("./routes/medicaldetails"));
 app.use("/users", require("./routes/users"))
 
 

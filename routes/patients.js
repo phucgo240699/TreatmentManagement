@@ -1,14 +1,17 @@
 const router = require("express").Router();
 const { authenticateToken } = require("../services/authenticationToken")
-const patientsController = require("../controllers/patients");
 
 // const { checkIsAdmin } = require("../services/checkAdmin");
-
+const { create } = require('../controllers/patients/create')
+const { get } = require('../controllers/patients/get')
+const { getAll } = require('../controllers/patients/getAll')
+const { update } = require('../controllers/patients/update')
+const { _delete } = require('../controllers/patients/delete')
 // medicinecategorise
-router.post("/", authenticateToken, patientsController.create);
-router.get("/:id", authenticateToken, patientsController.get);
-router.post("/getAll", authenticateToken, patientsController.getAll);
-router.put("/:id", authenticateToken, patientsController.update);
-router.delete("/:id", authenticateToken, patientsController.delete);
+router.post("/", authenticateToken, create);
+router.get("/:id", authenticateToken, get);
+router.post("/getAll", authenticateToken, getAll);
+router.put("/:id", authenticateToken, update);
+router.delete("/:id", authenticateToken, _delete);
 
 module.exports = router;

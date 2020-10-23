@@ -5,11 +5,11 @@ const { authenticateToken } = require("../services/authenticationToken")
 // const { checkIsAdmin } = require("../services/checkAdmin");
 
 
-const { create } = require('../controllers/medicinecategories/create')
-const { get } = require('../controllers/medicinecategories/get')
-const { getAll } = require('../controllers/medicinecategories/getAll')
-const { update } = require('../controllers/medicinecategories/update')
-const { _delete } = require('../controllers/medicinecategories/delete')
+const { create } = require('../controllers/medicalrecords/create')
+const { get } = require('../controllers/medicalrecords/get')
+const { getAll } = require('../controllers/medicalrecords/getAll')
+const { update } = require('../controllers/medicalrecords/update')
+const { _delete } = require('../controllers/medicalrecords/delete')
 // MedicineCategory
 router.post("/",authenticateToken, create);
 router.get("/:id",authenticateToken, get);
