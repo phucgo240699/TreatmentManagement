@@ -1,4 +1,3 @@
-const { pick } = require('lodash')
 const Faculties = require("../../models/faculties")
 
 const _delete = async (req, res) => {

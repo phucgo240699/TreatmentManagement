@@ -1,4 +1,3 @@
-const { pick } = require('lodash')
 const Services = require("../../models/services")
 
 const _delete = async (req, res) => {

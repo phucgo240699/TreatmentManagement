@@ -1,10 +1,10 @@
-const Users = require('../../models/users')
+const MedicalBills = require("../../models/medicalBills")
 
 const _delete = async (req, res) => {
   try {
     const queryDelete = { _id: req.params.id, isDeleted: false }
 
-    const deleted = await Users.findOneAndUpdate(
+    const deleted = await MedicalBills.findOneAndUpdate(
         queryDelete,
         { isDeleted: true },
         { new: true }
