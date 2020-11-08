@@ -14,6 +14,11 @@ const Services = new Schema({
     index: true,
     default: 0
   },
+  note:{
+    type:String,
+    required:true,
+    index:true
+  },
   isDeleted: {
     type: Boolean,
     required: true,

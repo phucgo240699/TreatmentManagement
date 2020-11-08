@@ -10,13 +10,15 @@ const getAll = async (req, res) => {
     let docs;
     if (!page || !limit) {
       docs = await Users.find(query)
-      .populate("departmentId", "name")
+        .populate("departmentId", "name")
+        .populate("facultyId", "name")
     }
     else {
       docs = await Users.find(query)
-      .skip(limit * (page - 1))
-      .limit(limit)
-      .populate("departmentId", "name")
+        .skip(limit * (page - 1))
+        .limit(limit)
+        .populate("departmentId", "name")
+        .populate("facultyId", "name")
     }
     return res.status(200).json({
       success: true,

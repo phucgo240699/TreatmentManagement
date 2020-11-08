@@ -14,7 +14,7 @@ const { cleanPatientQueue } = require('../controllers/departments/queue/clean')
 
 router.post("/", authenticateToken, isAdmin, create)
 router.get("/:id", authenticateToken, get)
-router.get("/", authenticateToken, getAll)
+router.post("/getAll", authenticateToken, getAll)
 router.put("/:id", authenticateToken, isAdmin, update)
 router.delete("/:id", authenticateToken, isAdmin, _delete)
 

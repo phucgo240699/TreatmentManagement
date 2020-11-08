@@ -9,7 +9,7 @@ const { _delete } = require('../controllers/medicalBillDetails/delete')
 
 router.post("/", authenticateToken, create)
 router.get("/:id", authenticateToken, get)
-router.get("/", authenticateToken, getAll)
+router.post("/getAll", authenticateToken, getAll)
 router.delete("/:id", authenticateToken, isAdmin, _delete)
 
 module.exports = router

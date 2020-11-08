@@ -5,8 +5,9 @@ const create = async (req, res) => {
     try {
         const patientId = req.body.patientId;
         const reason = req.body.reason;
+        const status = req.body.status;
         // Check not enough property
-        if (isEmpty(patientId) || isEmpty(reason)) {
+        if (isEmpty(patientId) || isEmpty(reason) || isEmpty(status)) {
             return res.status(406).json({
                 success: false,
                 error: "Not enough property"
@@ -19,7 +20,8 @@ const create = async (req, res) => {
                     ...pick(
                         req.body,
                         "patientId",
-                        "reason"
+                        "reason",
+                        "status"
                     )
                 }
             ]

@@ -3,18 +3,18 @@ const Departments = require("../../../models/departments")
 const removePatient = async (req, res) => {
   try {
     // Check permission
-    if (["admin", "doctor", "staff"].include(req.user.role) === false) {
-      return res.status(406).json({
-        success: false,
-        error: "Not allow"
-      })
-    }
-    if (req.user.role == "doctor" && req.user.departmentId != req.params.id) {
-      return res.status(406).json({
-        success: false,
-        error: "Not allow"
-      })
-    }
+    // if (["admin", "doctor", "staff"].include(req.user.role) === false) {
+    //   return res.status(406).json({
+    //     success: false,
+    //     error: "Not allow"
+    //   })
+    // }
+    // if (req.user.role == "doctor" && req.user.departmentId != req.params.id) {
+    //   return res.status(406).json({
+    //     success: false,
+    //     error: "Not allow"
+    //   })
+    // }
 
     const department = await Departments.findOne({ _id: req.params.id, isDeleted: false })
     

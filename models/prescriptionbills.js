@@ -4,20 +4,19 @@ const Schema = mongoose.Schema;
 
 const Prescriptionbills = new Schema(
     {
-        prescriptionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"prescriptions",
+        name: {
+            type: String,
             index: true,
             required: true
         },
-        into_money: {
-            type: Number,
+        conclude: {
+            type: String,
             index: true,
             required: true
         },
         pharmacistId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref:"users",
+            ref: "users",
             index: true,
             required: true
         },

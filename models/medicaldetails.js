@@ -17,6 +17,14 @@ const MedicalDetails = new Schema(
             required: true,
             index: true
         },
+        medical_reason: {
+            type: String,
+            index: true
+        },
+        note: {
+            type: String,
+            index: true
+        },
         images: {
             type: Array,
             index: true
@@ -24,11 +32,6 @@ const MedicalDetails = new Schema(
         result: {
             type: String,
             required: true,
-            index: true
-        },
-        prescriptionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'prescriptions',
             index: true
         },
         isDeleted: {

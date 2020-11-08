@@ -24,6 +24,18 @@ const Patients = new Schema(
             index: true,
             required: true
         },
+        email: {
+          type: String,
+          index: true,
+          required: true
+        },
+        gender: {
+          type: String,
+          index: true,
+          required: true,
+          enum: ["male", "female"],
+          default: "male"
+        },
         job: {
             type: String,
             default: '',

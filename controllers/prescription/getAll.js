@@ -6,22 +6,24 @@ const getAll = async (req, res) => {
   try {
     let Prescriptions;
     let query = {
-      ...pick(req.body, "patientId", "doctorId", "conclude"),
+      ...pick(req.body, "medicalrecordId", "doctorId", "conclude"),
       isDeleted: false
     };
 
     if (!page || !limit) {
       Prescriptions = await Prescription.find(query)
         .select(
-          "patientId doctorId conclude"
+          "medicalrecordId doctorId conclude createdAt"
         )
-        .populate("patientId", "name").populate("doctorId", "name");
+        .populate({ path: "medicalrecordId", populate: { path: "patientId" }, select: ["patientId"] })
+        .populate("doctorId");
     } else {
       Prescriptions = await Prescription.find(query)
         .select(
-          "patientId doctorId conclude"
+          "medicalrecordId doctorId conclude createdAt"
         )
-        .populate("patientId", "name").populate("doctorId", "name")
+        .populate({ path: "medicalrecordId", populate: { path: "patientId" }, select: ["patientId"] })
+        .populate("doctorId")
         .skip(limit * (page - 1))
         .limit(limit);
     }

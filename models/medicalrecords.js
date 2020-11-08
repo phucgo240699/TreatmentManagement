@@ -5,16 +5,23 @@ const Schema = mongoose.Schema;
 
 const MedicalRecords = new Schema(
   {
-    patientId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'patients',
-        required:true,
-        index:true
+    patientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'patients',
+      required: true,
+      index: true
     },
-    reason:{
-        type:String,
-        required:true,
-        index:true
+    status: {
+      type: String,
+      index: true,
+      required: true,
+      enum: ["chờ", "chờ chuyên khoa", "xong"],
+      default: "chờ"
+    },
+    reason: {
+      type: String,
+      required: true,
+      index: true
     },
     isDeleted: {
       type: Boolean,

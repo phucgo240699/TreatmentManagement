@@ -4,18 +4,22 @@ const Schema = mongoose.Schema
 
 const MedicalBillDetails = new Schema({
   medicalBillId: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'medicalbills',
     required: true,
     index: true
   },
-  prescriptionDetailId: {
-    type: Schema.Types.ObjectId,
+  note: {
+    type: String,
     required: true,
     index: true
   },
-  serviceIds: [{
-    type: Schema.Types.ObjectId
-  }],
+  serviceId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'services',
+    required: true,
+    index: true
+  },
   isDeleted: {
     type: Boolean,
     required: true,
@@ -24,4 +28,4 @@ const MedicalBillDetails = new Schema({
   }
 }, { timestamps: true })
 
-module.exports = mongoose.model("medicalBillDetails", MedicalBillDetails)
+module.exports = mongoose.model("medicalbilldetails", MedicalBillDetails)

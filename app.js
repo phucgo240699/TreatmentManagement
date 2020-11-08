@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors")
 const dotenv = require("dotenv");
 const helmet = require('helmet');
-
+var busboyBodyParser = require('busboy-body-parser');
 
 const { authenticateToken } = require("./services/authenticationToken")
 
@@ -17,6 +17,7 @@ const app = express()
 app.use(helmet())
 app.use(cors())
 app.use(bodyParser.json())
+app.use(busboyBodyParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static('images'));
 // Routes
@@ -26,6 +27,7 @@ app.use("/patients", authenticateToken, require("./routes/patients"));
 app.use("/prescriptions", authenticateToken, require("./routes/prescriptions"));
 app.use("/prescription-details", authenticateToken, require("./routes/prescriptiondetails"));
 app.use("/prescription-bills", authenticateToken, require("./routes/prescriptionbills"));
+app.use("/prescription-bill-details", authenticateToken, require("./routes/prescriptionbilldetails"));
 app.use("/medical-records",authenticateToken,require("./routes/medicalrecords"));
 app.use("/medical-details",authenticateToken,require("./routes/medicaldetails"));
 app.use("/users", require("./routes/users"))

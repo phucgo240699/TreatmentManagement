@@ -11,10 +11,13 @@ const Users = new Schema(
     },
     birthday: {
       type: Date,
+      index: true,
       required: true
     },
     address: {
-      type: String
+      type: String,
+      index: true,
+      required: true
     },
     phoneNumber: {
       type: String,
@@ -30,6 +33,18 @@ const Users = new Schema(
       type: Schema.Types.ObjectId,
       ref: "departments",
       index: true
+    },
+    email: {
+      type: String,
+      index: true,
+      required: true
+    },
+    gender: {
+      type: String,
+      index: true,
+      required: true,
+      enum: ["male", "female"],
+      default: "male"
     },
     username: {
       type: String,

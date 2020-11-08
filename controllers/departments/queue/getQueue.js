@@ -10,12 +10,12 @@ const getQueue = async (req, res) => {
     if (!page || !limit) {
       docs = await Departments.find(query)
       .select("queue -_id")
-      .populate("queue")
+      .populate({ path: "queue", populate: { path: "patientId" }, select: ["patientId", "reason","status"] })
     }
     else {
       docs = await Departments.find(query)
       .select("queue -_id")
-      .populate("queue")
+      .populate({ path: "queue", populate: { path: "patientId" }, select: ["patientId", "reason","status"] })
       .skip(limit * (page - 1))
       .limit(limit)
     }

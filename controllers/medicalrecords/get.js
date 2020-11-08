@@ -3,7 +3,7 @@ const MedicalRecord = require("../../models/medicalrecords");
 
 const get = async (req, res) => {
   try {
-    const medicalrecord = await MedicalRecord.findOne({ _id: req.params.id, isDeleted: false }).populate("patientId","name");
+    const medicalrecord = await MedicalRecord.findOne({ _id: req.params.id, isDeleted: false }).populate("patientId");
 
     if (isEmpty(medicalrecord)) {
       return res.status(406).json({

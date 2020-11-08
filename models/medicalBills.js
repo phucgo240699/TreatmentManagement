@@ -1,11 +1,20 @@
 const mongoose = require("mongoose")
+const { schema } = require("./medicinecategories")
 
 const Schema = mongoose.Schema
 
 const MedicalBills = new Schema({
   totalPrice: {
     type: Number,
-    required: true
+    required: true,
+    index: true,
+    default: 0
+  },
+  medicalrecordId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'medicalrecords',
+    required: true,
+    index: true
   },
   isDeleted: {
     type: Boolean,
@@ -15,4 +24,4 @@ const MedicalBills = new Schema({
   }
 }, { timestamps: true })
 
-module.exports = mongoose.model("medicalBills", MedicalBills)
+module.exports = mongoose.model("medicalbills", MedicalBills)

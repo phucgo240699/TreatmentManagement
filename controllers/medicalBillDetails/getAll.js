@@ -1,3 +1,4 @@
+const { pick } = require("lodash");
 const MedicalBillDetails = require("../../models/medicalBillDetails")
 
 const getAll = async (req, res) => {
@@ -5,20 +6,23 @@ const getAll = async (req, res) => {
   const limit = Number(req.query.limit) // limit docs per page
 
   try {
-    const query = { isDeleted: false }
+    let query = {
+      ...pick(req.body, "medicalBillId", "serviceId"),
+      isDeleted: false
+    };
 
     let docs;
     if (!page || !limit) {
       docs = await MedicalBillDetails.find(query)
       .populate("medicalBillId")
-      .populate("prescriptionDetailId")
+      .populate("serviceId")
     }
     else {
       docs = await MedicalBillDetails.find(query)
       .skip(limit * (page - 1))
       .limit(limit)
       .populate("medicalBillId")
-      .populate("prescriptionDetailId")
+      .populate("serviceId")
     }
     return res.status(200).json({
       success: true,

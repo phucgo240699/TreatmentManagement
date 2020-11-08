@@ -15,13 +15,13 @@ const getAll = async (req, res) => {
         .select(
           "prescriptionId medicineId quantity"
         )
-        .populate({ path: "medicineId", select: ["price", "name"] });
+        .populate({ path: "medicineId" });
     } else {
       prescriptiondetails = await Prescriptiondetails.find(query)
         .select(
           "prescriptionId medicineId quantity"
         )
-        .populate({ path: "medicineId", select: ["price", "name"] })
+        .populate({ path: "medicineId"})
         .skip(limit * (page - 1))
         .limit(limit);
     }

@@ -4,7 +4,7 @@ const handleBody = (body) => {
 
   return {
     error: null,
-    body: { ...pick(body, "medicalBillId", "prescriptionDetailId", "serviceIds") }
+    body: { ...pick(body, "medicalBillId", "note", "serviceId") }
   }
 }
 

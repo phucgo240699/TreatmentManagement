@@ -13,12 +13,12 @@ const getAll = async (req, res) => {
     if (!page || !limit) {
       patients = await Patient.find(query)
         .select(
-          "name birthday address phoneNumber job "
+          "name birthday address phoneNumber email gender job "
         );
     } else {
       patients = await Patient.find(query)
         .select(
-          "name birthday address phoneNumber job"
+          "name birthday address phoneNumber email gender job"
         )
         .skip(limit * (page - 1))
         .limit(limit);

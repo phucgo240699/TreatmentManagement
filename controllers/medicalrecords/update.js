@@ -1,4 +1,4 @@
-const { pick } = require("lodash");
+const { pick, isEmpty } = require("lodash");
 const MedicalRecord = require("../../models/medicalrecords");
 
 const update = async (req, res) => {
@@ -10,7 +10,8 @@ const update = async (req, res) => {
                 ...pick(
                     req.body,
                     "patientId",
-                    "reason"
+                    "reason",
+                    "status"
                 )
             },
             { new: true }

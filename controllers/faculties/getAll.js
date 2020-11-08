@@ -1,3 +1,4 @@
+const { pick } = require("lodash");
 const Faculties = require("../../models/faculties")
 
 const getAll = async (req, res) => {
@@ -5,8 +6,11 @@ const getAll = async (req, res) => {
   const limit = Number(req.query.limit) // limit docs per page
 
   try {
-    const query = { isDeleted: false }
-
+    let query = {
+      ...pick(req.body, "name"),
+      isDeleted: false
+    };
+    
     let docs;
     if (!page || !limit) {
       docs = await Faculties.find(query)

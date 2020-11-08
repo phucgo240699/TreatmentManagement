@@ -3,11 +3,12 @@ const { isEmpty, pick } = require("lodash");
 
 const create = async (req, res) => {
     try {
-        const prescriptionId = req.body.prescriptionId;
         const pharmacistId = req.body.pharmacistId;
+        const name = req.body.name;
+        const conclude = req.body.conclude;
         const into_money = req.body.into_money;
         // Check not enough property
-        if (isEmpty(prescriptionId) || isEmpty(pharmacistId)) {
+        if (isEmpty(pharmacistId) || isEmpty(name) || isEmpty(conclude)) {
             return res.status(406).json({
                 success: false,
                 error: "Not enough property"
@@ -20,9 +21,10 @@ const create = async (req, res) => {
                 {
                     ...pick(
                         req.body,
-                        "prescriptionId",
                         "pharmacistId",
-                        "into_money"
+                        "into_money",
+                        "name",
+                        "conclude"
                     )
                 }
             ]

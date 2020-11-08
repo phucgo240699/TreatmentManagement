@@ -6,20 +6,20 @@ const getAll = async (req, res) => {
   try {
     let Prescriptionbills;
     let query = {
-      ...pick(req.body, "prescriptionId", "pharmacistId", "into_money"),
+      ...pick(req.body, "pharmacistId", "into_money"),
       isDeleted: false
     };
 
     if (!page || !limit) {
       Prescriptionbills = await Prescriptionbill.find(query)
         .select(
-          "prescriptionId pharmacistId into_money"
+          "pharmacistId into_money name conclude"
         )
         .populate("pharmacistId", "name");
     } else {
       Prescriptionbills = await Prescriptionbill.find(query)
         .select(
-          "prescriptionId pharmacistId into_money"
+          "pharmacistId into_money name conclude"
         )
         .populate("patientId", "name")
         .skip(limit * (page - 1))

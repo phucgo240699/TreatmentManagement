@@ -3,7 +3,9 @@ const Prescription = require("../../models/prescriptions");
 
 const get = async (req, res) => {
   try {
-    const prescription = await Prescription.findOne({ _id: req.params.id, isDeleted: false }).populate("patientId", "name").populate("doctorId", "name");
+    const prescription = await Prescription.findOne({ _id: req.params.id, isDeleted: false })
+    .populate({ path: "medicalrecordId", populate: { path: "patientId" }, select: ["patientId"] })
+    .populate("doctorId", "name");
 
     if (isEmpty(prescription)) {
       return res.status(406).json({

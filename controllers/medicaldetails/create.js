@@ -1,10 +1,7 @@
 const MedicalDetails = require("../../models/medicaldetails");
 const { isEmpty, pick } = require("lodash");
-// const { startSession } = require("mongoose");
-// const { commitTransactions, abortTransactions } = require("../../services/transaction");
-const {storeImage} = require("../../services/storeimage");
+const { storeImage } = require("../../services/storeimage");
 const create = async (req, res) => {
-    let sessions = [];
     try {
         const medicalrecordId = req.body.medicalrecordId;
         const doctorId = req.body.doctorId;
@@ -17,25 +14,22 @@ const create = async (req, res) => {
             });
         }
 
-        // Transactions
-        // let session = await startSession();
-        // session.startTransaction();
-        // sessions.push(session);
-
         // create list more images
-        var images = []
+        var listmore = []
+        console.log('a')
         if (!isEmpty(req.body.images)) {
+            console.log('b')
             var listimages = req.body.images.split(',d');
             if (listimages instanceof Array) {
                 for (var i = 0; i < listimages.length; i++) {
                     if (i != 0) {
                         listimages[i] = "d" + listimages[i];
                     }
-                    images.push(storeImage(listimages[i]));
+                    listmore.push(storeImage(listimages[i]));
                 }
             }
             else {
-                images.push(storeImage(listimages));
+                listmore.push(storeImage(listimages));
             }
         }
 
@@ -48,30 +42,27 @@ const create = async (req, res) => {
                         "medicalrecordId",
                         "doctorId",
                         "result",
-                        "prescriptionId"
+                        "prescriptionId",
+                        "note",
+                        "medical_reason"
                     ),
-                    images: images
+                    images: listmore
                 }
             ]
-            // { session: session }
         );
 
         if (isEmpty(newMedicalDetails)) {
-            // await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
                 error: "Created failed"
             });
         }
-        // Done
-        // await commitTransactions(sessions);
 
         return res.status(200).json({
             success: true,
             data: newMedicalDetails[0]
         });
     } catch (error) {
-        // await abortTransactions(sessions);
         return res.status(500).json({
             success: false,
             error: error.message

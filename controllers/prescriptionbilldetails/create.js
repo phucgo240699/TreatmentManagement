@@ -1,19 +1,17 @@
-const Patient = require("../../models/patients");
+const Prescriptionbilldetails = require("../../models/Prescriptionbilldetails");
 const { isEmpty, pick } = require("lodash");
 const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../../services/transaction");
-
+const Medicine = require("../../models/medicines");
 const create = async (req, res) => {
     let sessions = [];
     try {
-        const name = req.body.name;
-        const birthday = req.body.birthday;
-        const address = req.body.address;
-        const phoneNumber = req.body.phoneNumber;
-        const gender = req.body.gender;
-        const email = req.body.email;
+        const prescriptionbillId = req.body.prescriptionbillId;
+        const medicineId = req.body.medicineId;
+        const quantity = req.body.quantity;
+
         // Check not enough property
-        if (isEmpty(gender) || isEmpty(email) || isEmpty(name) || isEmpty(birthday) || isEmpty(address) || isEmpty(phoneNumber)) {
+        if (isEmpty(prescriptionbillId) || isEmpty(medicineId) || !quantity) {
             return res.status(406).json({
                 success: false,
                 error: "Not enough property"
@@ -26,25 +24,37 @@ const create = async (req, res) => {
         sessions.push(session);
 
         //Create
-        const newPatient = await Patient.create(
+        const newPrescriptionbilldetails = await Prescriptionbilldetails.create(
             [
                 {
                     ...pick(
                         req.body,
-                        "name",
-                        "birthday",
-                        "address",
-                        "phoneNumber",
-                        "job",
-                        "email",
-                        "gender"
+                        "prescriptionbillId",
+                        "medicineId",
+                        "quantity"
                     )
                 }
             ],
             { session: session }
         );
 
-        if (isEmpty(newPatient)) {
+        const updateMedicine = await Medicine.findOneAndUpdate(
+            { _id: medicineId, isDeleted: false },
+            {
+                $inc : {'quantity' : -quantity}
+            },
+            { session, new: true }
+        );
+
+        if (isEmpty(updateMedicine) || updateMedicine.quantity < 0) {
+            await abortTransactions(sessions);
+            return res.status(406).json({
+                success: false,
+                error: "out of stock"
+            });
+        }
+
+        if (isEmpty(newPrescriptionbilldetails)) {
             await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
@@ -53,17 +63,18 @@ const create = async (req, res) => {
         }
 
         // Check exist
-        const oldPatient = await Patient.find({
-            name: name,
+        const oldPrescriptionbilldetails = await Prescriptionbilldetails.find({
+            prescriptionbillId: prescriptionbillId,
+            medicineId: medicineId,
             isDeleted: false
         }, null, { session });
 
 
-        if (oldPatient.length > 1) {
+        if (oldPrescriptionbilldetails.length > 1) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,
-                error: "This Patient's record is already exist"
+                error: "This Prescriptionbilldetails is already exist"
             });
         }
 
@@ -73,7 +84,7 @@ const create = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            data: newPatient[0]
+            data: newPrescriptionbilldetails[0]
         });
     } catch (error) {
         await abortTransactions(sessions);

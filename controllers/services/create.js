@@ -10,6 +10,7 @@ const create = async (req, res) => {
     const query = { 
       name: req.body.name,
       price: req.body.price,
+      note: req.body.note,
       isDeleted: false
     } // for oldDocs
 

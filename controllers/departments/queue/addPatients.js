@@ -4,23 +4,23 @@ const { isEmpty }= require("lodash")
 const addPatients = async (req, res) => {
   try {
     const doc = await Departments.findOne({ _id: req.params.id, isDeleted: false })
-    const patientIds = req.body.patientIds
+    const medicalrecordIds = req.body.medicalrecordIds
     
-    if ( patientIds === undefined ) {
+    if ( medicalrecordIds === undefined ) {
       return res.status(406).json({
         success: false,
         error: "Not enough information"
       });
     }
 
-    if ( Array.isArray(patientIds) == false ) {
+    if ( Array.isArray(medicalrecordIds) == false ) {
       return res.status(406).json({
         success: false,
-        error: "patientIds must be array"
+        error: "medicalrecordIds must be array"
       });
     }
     
-    patientIds.forEach(patientId => {
+    medicalrecordIds.forEach(patientId => {
       doc.queue.push(patientId)
     });
 

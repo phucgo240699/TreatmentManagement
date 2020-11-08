@@ -41,7 +41,6 @@ const review = async (req, res) => {
         {
             ...pick(
                 req.body,
-                "prescriptionId",
                 "pharmacistId"
             ),
             into_money: into_money

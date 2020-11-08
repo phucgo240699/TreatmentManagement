@@ -2,23 +2,22 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const Prescriptions = new Schema(
+const Prescriptionbilldetails = new Schema(
     {
-        medicalrecordId: {
+        prescriptionbillId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref:"medicalrecords",
+            ref: "prescriptionbills",
             index: true,
             required: true
         },
-        doctorId: {
+        medicineId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref:"users",
+            ref: "medicines",
             index: true,
             required: true
         },
-        conclude: {
-            type: String,
-            index: true,
+        quantity: {
+            type: Number,
             required: true
         },
         isDeleted: {
@@ -31,4 +30,4 @@ const Prescriptions = new Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("prescriptions", Prescriptions);
+module.exports = mongoose.model("prescriptionbilldetails", Prescriptionbilldetails);

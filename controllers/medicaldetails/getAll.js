@@ -13,13 +13,13 @@ const getAll = async (req, res) => {
     if (!page || !limit) {
       medicaldetails = await MedicalDetails.find(query)
         .select(
-          "medicalrecordId doctorId prescriptionId images result"
+          "medicalrecordId doctorId prescriptionId images result note"
         )
         .populate("doctorId", "name");
     } else {
       medicaldetails = await MedicalDetails.find(query)
         .select(
-          "medicalrecordId doctorId prescriptionId images result"
+          "medicalrecordId doctorId prescriptionId images result note"
         )
         .populate("doctorId", "name")
         .skip(limit * (page - 1))

@@ -1,10 +1,10 @@
 const { pick } = require("lodash")
 
-const handleBody = (body) => { 
+const handleBody = (body) => {
 
   return {
     error: null,
-    body: { ...pick(body, "totalPrice") }
+    body: { ...pick(body, "totalPrice", "medicalrecordId") }
   }
 }
 
