@@ -9,6 +9,11 @@ const Prescriptionbills = new Schema(
             index: true,
             required: true
         },
+        prescriptionId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'prescriptions',
+            indexes: true
+        },
         conclude: {
             type: String,
             index: true,

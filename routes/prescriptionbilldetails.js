@@ -2,11 +2,11 @@ const router = require("express").Router();
 const { authenticateToken } = require("../services/authenticationToken")
 
 // const { checkIsAdmin } = require("../services/checkAdmin");
-const { create } = require('../controllers/Prescriptionbilldetails/create')
-const { get } = require('../controllers/Prescriptionbilldetails/get')
-const { getAll } = require('../controllers/Prescriptionbilldetails/getAll')
-const { update } = require('../controllers/Prescriptionbilldetails/update')
-const { _delete } = require('../controllers/Prescriptionbilldetails/delete')
+const { create } = require('../controllers/prescriptionbilldetails/create')
+const { get } = require('../controllers/prescriptionbilldetails/get')
+const { getAll } = require('../controllers/prescriptionbilldetails/getAll')
+const { update } = require('../controllers/prescriptionbilldetails/update')
+const { _delete } = require('../controllers/prescriptionbilldetails/delete')
 
 // medicinecategorise
 router.post("/", authenticateToken, create);

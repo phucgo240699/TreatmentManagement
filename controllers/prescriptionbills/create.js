@@ -6,6 +6,7 @@ const create = async (req, res) => {
         const pharmacistId = req.body.pharmacistId;
         const name = req.body.name;
         const conclude = req.body.conclude;
+        const prescriptionId = req.body.prescriptionId;
         const into_money = req.body.into_money;
         // Check not enough property
         if (isEmpty(pharmacistId) || isEmpty(name) || isEmpty(conclude)) {
@@ -24,7 +25,8 @@ const create = async (req, res) => {
                         "pharmacistId",
                         "into_money",
                         "name",
-                        "conclude"
+                        "conclude",
+                        "prescriptionId"
                     )
                 }
             ]

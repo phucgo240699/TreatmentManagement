@@ -1,5 +1,5 @@
 const { pick } = require("lodash");
-const Prescriptionbilldetails = require("../../models/Prescriptionbilldetails");
+const Prescriptionbilldetails = require("../../models/prescriptionbilldetails");
 
 const getAll = async (req, res) => {
   const page = Number(req.query.page); // page index

@@ -1,5 +1,5 @@
 const { isEmpty } = require("lodash");
-const Prescriptionbilldetails = require("../../models/Prescriptionbilldetails");
+const Prescriptionbilldetails = require("../../models/prescriptionbilldetails");
 
 const get = async (req, res) => {
   try {

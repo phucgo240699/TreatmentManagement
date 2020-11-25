@@ -15,13 +15,15 @@ const getAll = async (req, res) => {
         .select(
           "medicalrecordId doctorId prescriptionId images result note"
         )
-        .populate("doctorId", "name");
+        .populate({ path: "doctorId", populate: { path: "facultyId" }, select: ["facultyId"] })
+        .populate({ path: "doctorId", populate: { path: "departmentId" }, select: ["departmentId", "name"] });
     } else {
       medicaldetails = await MedicalDetails.find(query)
         .select(
           "medicalrecordId doctorId prescriptionId images result note"
         )
-        .populate("doctorId", "name")
+        .populate({ path: "doctorId", populate: { path: "facultyId" }, select: ["facultyId"] })
+        .populate({ path: "doctorId", populate: { path: "departmentId" }, select: ["departmentId", "name"] })
         .skip(limit * (page - 1))
         .limit(limit);
     }

@@ -19,28 +19,28 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(busboyBodyParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/images', express.static('images'));
+app.use('/api/images', express.static('images'));
 // Routes
-app.use("/medicine-categories", authenticateToken, require("./routes/medicinecategories"));
-app.use("/medicines", authenticateToken, require("./routes/medicines"));
-app.use("/patients", authenticateToken, require("./routes/patients"));
-app.use("/prescriptions", authenticateToken, require("./routes/prescriptions"));
-app.use("/prescription-details", authenticateToken, require("./routes/prescriptiondetails"));
-app.use("/prescription-bills", authenticateToken, require("./routes/prescriptionbills"));
-app.use("/prescription-bill-details", authenticateToken, require("./routes/prescriptionbilldetails"));
-app.use("/medical-records",authenticateToken,require("./routes/medicalrecords"));
-app.use("/medical-details",authenticateToken,require("./routes/medicaldetails"));
-app.use("/users", require("./routes/users"))
+app.use("/api/medicine-categories", authenticateToken, require("./routes/medicinecategories"));
+app.use("/api/medicines", authenticateToken, require("./routes/medicines"));
+app.use("/api/patients", authenticateToken, require("./routes/patients"));
+app.use("/api/prescriptions", authenticateToken, require("./routes/prescriptions"));
+app.use("/api/prescription-details", authenticateToken, require("./routes/prescriptiondetails"));
+app.use("/api/prescription-bills", authenticateToken, require("./routes/prescriptionbills"));
+app.use("/api/prescription-bill-details", authenticateToken, require("./routes/prescriptionbilldetails"));
+app.use("/api/medical-records",authenticateToken,require("./routes/medicalrecords"));
+app.use("/api/medical-details",authenticateToken,require("./routes/medicaldetails"));
+app.use("/api/users", require("./routes/users"))
 
 
 
 
 
-app.use("/faculties", require("./routes/faculties"))
-app.use("/departments", require("./routes/departments"))
-app.use("/services", require("./routes/services"))
-app.use("/medical-bills", require("./routes/medicalBills"))
-app.use("/medical-bill-details", require("./routes/medicalBillDetails"))
+app.use("/api/faculties", require("./routes/faculties"))
+app.use("/api/departments", require("./routes/departments"))
+app.use("/api/services", require("./routes/services"))
+app.use("/api/medical-bills", require("./routes/medicalBills"))
+app.use("/api/medical-bill-details", require("./routes/medicalBillDetails"))
 
 mongoose
   .connect(

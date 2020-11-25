@@ -11,11 +11,11 @@ const create = async (req, res) => {
     //   })
     // }
 
-    const query = { 
-      medicalBillId: req.body.medicalBillId,
-      serviceId: req.body.serviceId,
-      isDeleted: false
-    } // for oldDocs
+    // const query = { 
+    //   medicalBillId: req.body.medicalBillId,
+    //   serviceId: req.body.serviceId,
+    //   isDeleted: false
+    // } // for oldDocs
 
     // Handle data
     const { error, body} = handleBody(req.body) // for newDoc

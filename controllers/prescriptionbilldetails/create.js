@@ -1,4 +1,4 @@
-const Prescriptionbilldetails = require("../../models/Prescriptionbilldetails");
+const Prescriptionbilldetails = require("../../models/prescriptionbilldetails");
 const { isEmpty, pick } = require("lodash");
 const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../../services/transaction");
@@ -38,6 +38,14 @@ const create = async (req, res) => {
             { session: session }
         );
 
+        if (isEmpty(newPrescriptionbilldetails)) {
+            await abortTransactions(sessions);
+            return res.status(406).json({
+                success: false,
+                error: "Created failed"
+            });
+        }
+
         const updateMedicine = await Medicine.findOneAndUpdate(
             { _id: medicineId, isDeleted: false },
             {
@@ -54,13 +62,7 @@ const create = async (req, res) => {
             });
         }
 
-        if (isEmpty(newPrescriptionbilldetails)) {
-            await abortTransactions(sessions);
-            return res.status(406).json({
-                success: false,
-                error: "Created failed"
-            });
-        }
+      
 
         // Check exist
         const oldPrescriptionbilldetails = await Prescriptionbilldetails.find({

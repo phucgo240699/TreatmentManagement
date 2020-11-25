@@ -5,8 +5,7 @@ const { authenticateToken } = require("../services/authenticationToken")
 const { create } = require('../controllers/prescriptionbills/create')
 const { get } = require('../controllers/prescriptionbills/get')
 const { getAll } = require('../controllers/prescriptionbills/getAll')
-// const { update } = require('../controllers/prescriptionbills/update')
-const { _delete } = require('../controllers/prescriptionbills/delete')
+// const { _delete } = require('../controllers/prescriptionbills/delete')
 const { review } = require('../controllers/prescriptionbills/review')
 // medicinecategorise
 router.post("/", authenticateToken, create);

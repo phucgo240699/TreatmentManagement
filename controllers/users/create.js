@@ -40,7 +40,7 @@ const create = async (req, res) => {
     
     // Check duplicate
     const oldDocs = await Users.find(query, null, {session})
-    
+    console.log(oldDocs)
     if (oldDocs.length > 1) {
       await abortTransactions(sessions)
       return res.status(406).json({

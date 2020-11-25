@@ -16,14 +16,17 @@ const getAll = async (req, res) => {
           "medicalrecordId doctorId conclude createdAt"
         )
         .populate({ path: "medicalrecordId", populate: { path: "patientId" }, select: ["patientId"] })
-        .populate("doctorId");
+        .populate({ path: "doctorId", populate: { path: "facultyId" }, select: ["facultyId"] })
+        .populate({ path: "doctorId", populate: { path: "departmentId" }, select: ["departmentId", "name"] })
+
     } else {
       Prescriptions = await Prescription.find(query)
         .select(
           "medicalrecordId doctorId conclude createdAt"
         )
         .populate({ path: "medicalrecordId", populate: { path: "patientId" }, select: ["patientId"] })
-        .populate("doctorId")
+        .populate({ path: "doctorId", populate: { path: "facultyId" }, select: ["facultyId"] })
+        .populate({ path: "doctorId", populate: { path: "departmentId" }, select: ["departmentId", "name"] })
         .skip(limit * (page - 1))
         .limit(limit);
     }
