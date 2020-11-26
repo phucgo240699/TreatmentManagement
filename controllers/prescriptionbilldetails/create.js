@@ -1,20 +1,28 @@
 const Prescriptionbilldetails = require("../../models/prescriptionbilldetails");
-const { isEmpty, pick } = require("lodash");
+const { isEmpty, pick, isArray } = require("lodash");
 const { startSession } = require("mongoose");
 const { commitTransactions, abortTransactions } = require("../../services/transaction");
 const Medicine = require("../../models/medicines");
 const create = async (req, res) => {
     let sessions = [];
     try {
-        const prescriptionbillId = req.body.prescriptionbillId;
-        const medicineId = req.body.medicineId;
-        const quantity = req.body.quantity;
+        // const prescriptionbillId = req.body.prescriptionbillId;
+        // const medicineId = req.body.medicineId;
+        // const quantity = req.body.quantity;
 
-        // Check not enough property
-        if (isEmpty(prescriptionbillId) || isEmpty(medicineId) || !quantity) {
+        // // Check not enough property
+        // if (isEmpty(prescriptionbillId) || isEmpty(medicineId) || !quantity) {
+        //     return res.status(406).json({
+        //         success: false,
+        //         error: "Not enough property"
+        //     });
+        // }
+
+        // If not array, return
+        if (isArray(req.body) !== true) {
             return res.status(406).json({
                 success: false,
-                error: "Not enough property"
+                error: "You must be pass an array"
             });
         }
 
@@ -22,21 +30,24 @@ const create = async (req, res) => {
         let session = await startSession();
         session.startTransaction();
         sessions.push(session);
-
+        
+        // Prepare data
+        let quantity = req.body.reduce((quantity, element) => {
+            return element.quantity + quantity
+        }, 0)
+        let array = req.body.map(element => 
+            pick(element,
+                "prescriptionbillId",
+                "medicineId",
+                "quantity"
+            )
+        )
+        
         //Create
-        const newPrescriptionbilldetails = await Prescriptionbilldetails.create(
-            [
-                {
-                    ...pick(
-                        req.body,
-                        "prescriptionbillId",
-                        "medicineId",
-                        "quantity"
-                    )
-                }
-            ],
+        const newPrescriptionbilldetails = await Prescriptionbilldetails.insertMany(
+            array,
             { session: session }
-        );
+        )
 
         if (isEmpty(newPrescriptionbilldetails)) {
             await abortTransactions(sessions);
