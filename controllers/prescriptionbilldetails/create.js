@@ -42,6 +42,7 @@ const create = async (req, res) => {
             });
         }
 
+<<<<<<< Updated upstream
         // Check exist
         let findPrescriptionBilldetailMethods = []
         data.forEach(element => {
@@ -67,6 +68,11 @@ const create = async (req, res) => {
         let updateQuantityMethods = []
         data.forEach(element => {
             updateQuantityMethods.push(
+=======
+        arrayMethod = []
+        array.forEach(element => {
+            arrayMethod.push(
+>>>>>>> Stashed changes
                 Medicine.findOneAndUpdate(
                     { _id: element.medicineId, isDeleted: false },
                     {
@@ -77,18 +83,43 @@ const create = async (req, res) => {
             )
         })
 
+<<<<<<< Updated upstream
         // Update quantity
         let updatedQuantity = await Promise.all(updateQuantityMethods)
 
         // Check quantity
         if (isEmpty(updatedQuantity) || updatedQuantity.length != data.length) {
+=======
+        let updateMedicine = await Promise.all(arrayMethod)
+
+        if (updateMedicine.length !== array.length) {
+>>>>>>> Stashed changes
             await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
                 error: "out of stock"
             });
         }
+<<<<<<< Updated upstream
 
+=======
+        
+        // Check exist
+        // const oldPrescriptionbilldetails = await Prescriptionbilldetails.find({
+        //     prescriptionbillId: prescriptionbillId,
+        //     medicineId: medicineId,
+        //     isDeleted: false
+        // }, null, { session });
+        
+        // if (oldPrescriptionbilldetails.length > 1) {
+        //     await abortTransactions(sessions);
+        //     return res.status(409).json({
+        //         success: false,
+        //         error: "This Prescriptionbilldetails is already exist"
+        //     });
+        // }
+        
+>>>>>>> Stashed changes
         // Done
         await commitTransactions(sessions);
 
