@@ -18,16 +18,16 @@ const create = async (req, res) => {
         let session = await startSession();
         session.startTransaction();
         sessions.push(session);
-        
+
         // Prepare data for Create
-        let data = req.body.map(element => 
+        let data = req.body.map(element =>
             pick(element,
                 "prescriptionbillId",
                 "medicineId",
                 "quantity"
             )
         )
-        
+
         // Create
         const newPrescriptionbilldetails = await Prescriptionbilldetails.insertMany(
             data,
@@ -55,13 +55,20 @@ const create = async (req, res) => {
         })
         let oldPrescriptionBilldetails = await Promise.all(findPrescriptionBilldetailMethods)
 
-        if (oldPrescriptionBilldetails.length > 0) {
+        let checkExist = false;
+        oldPrescriptionBilldetails.forEach(async e => {
+            if (e.length > 1) {
+                checkFail = true
+            }
+        })
+        if (checkExist) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,
                 error: "This Prescriptionbilldetails is already exist"
             });
         }
+
 
         // Prepare data for update quantity
         let updateQuantityMethods = []
@@ -70,7 +77,7 @@ const create = async (req, res) => {
                 Medicine.findOneAndUpdate(
                     { _id: element.medicineId, isDeleted: false },
                     {
-                        $inc : {'quantity' : -(element.quantity)}
+                        $inc: { 'quantity': -(element.quantity) }
                     },
                     { session, new: true }
                 )
