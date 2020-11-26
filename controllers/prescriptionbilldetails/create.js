@@ -32,9 +32,6 @@ const create = async (req, res) => {
         sessions.push(session);
         
         // Prepare data
-        let quantity = req.body.reduce((quantity, element) => {
-            return element.quantity + quantity
-        }, 0)
         let array = req.body.map(element => 
             pick(element,
                 "prescriptionbillId",
@@ -57,13 +54,20 @@ const create = async (req, res) => {
             });
         }
 
-        const updateMedicine = await Medicine.findOneAndUpdate(
-            { _id: medicineId, isDeleted: false },
-            {
-                $inc : {'quantity' : -quantity}
-            },
-            { session, new: true }
-        );
+        arrayMethod = []
+        array.forEach(element => {
+            arrayMethod.push(() => {
+                Medicine.findOneAndUpdate(
+                    { _id: element.medicineId, isDeleted: false },
+                    {
+                        $inc : {'quantity' : -(element.quantity)}
+                    },
+                    { session, new: true }
+                )
+            })
+        })
+
+        await Promise.all(arrayMethod)
 
         if (isEmpty(updateMedicine) || updateMedicine.quantity < 0) {
             await abortTransactions(sessions);
