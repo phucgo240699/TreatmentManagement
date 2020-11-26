@@ -6,18 +6,6 @@ const Medicine = require("../../models/medicines");
 const create = async (req, res) => {
     let sessions = [];
     try {
-        // const prescriptionbillId = req.body.prescriptionbillId;
-        // const medicineId = req.body.medicineId;
-        // const quantity = req.body.quantity;
-
-        // // Check not enough property
-        // if (isEmpty(prescriptionbillId) || isEmpty(medicineId) || !quantity) {
-        //     return res.status(406).json({
-        //         success: false,
-        //         error: "Not enough property"
-        //     });
-        // }
-
         // If not array, return
         if (isArray(req.body) !== true) {
             return res.status(406).json({
@@ -31,8 +19,8 @@ const create = async (req, res) => {
         session.startTransaction();
         sessions.push(session);
         
-        // Prepare data
-        let array = req.body.map(element => 
+        // Prepare data for Create
+        let data = req.body.map(element => 
             pick(element,
                 "prescriptionbillId",
                 "medicineId",
@@ -40,13 +28,13 @@ const create = async (req, res) => {
             )
         )
         
-        //Create
+        // Create
         const newPrescriptionbilldetails = await Prescriptionbilldetails.insertMany(
-            array,
+            data,
             { session: session }
         )
 
-        if (isEmpty(newPrescriptionbilldetails)) {
+        if (isEmpty(newPrescriptionbilldetails) || newPrescriptionbilldetails.length != data.length) {
             await abortTransactions(sessions);
             return res.status(406).json({
                 success: false,
@@ -54,40 +42,20 @@ const create = async (req, res) => {
             });
         }
 
-        arrayMethod = []
-        array.forEach(element => {
-            arrayMethod.push(() => {
-                Medicine.findOneAndUpdate(
-                    { _id: element.medicineId, isDeleted: false },
-                    {
-                        $inc : {'quantity' : -(element.quantity)}
-                    },
-                    { session, new: true }
-                )
-            })
-        })
-
-        await Promise.all(arrayMethod)
-
-        if (isEmpty(updateMedicine) || updateMedicine.quantity < 0) {
-            await abortTransactions(sessions);
-            return res.status(406).json({
-                success: false,
-                error: "out of stock"
-            });
-        }
-
-      
-
         // Check exist
-        const oldPrescriptionbilldetails = await Prescriptionbilldetails.find({
-            prescriptionbillId: prescriptionbillId,
-            medicineId: medicineId,
-            isDeleted: false
-        }, null, { session });
+        let findPrescriptionBilldetailMethods = []
+        data.forEach(element => {
+            findPrescriptionBilldetailMethods.push(
+                Prescriptionbilldetails.find({
+                    prescriptionbillId: element.prescriptionbillId,
+                    medicineId: element.medicineId,
+                    isDeleted: false
+                }, null, { session })
+            )
+        })
+        let oldPrescriptionBilldetails = await Promise.all(findPrescriptionBilldetailMethods)
 
-
-        if (oldPrescriptionbilldetails.length > 1) {
+        if (oldPrescriptionBilldetails.length > 0) {
             await abortTransactions(sessions);
             return res.status(409).json({
                 success: false,
@@ -95,6 +63,31 @@ const create = async (req, res) => {
             });
         }
 
+        // Prepare data for update quantity
+        let updateQuantityMethods = []
+        data.forEach(element => {
+            updateQuantityMethods.push(
+                Medicine.findOneAndUpdate(
+                    { _id: element.medicineId, isDeleted: false },
+                    {
+                        $inc : {'quantity' : -(element.quantity)}
+                    },
+                    { session, new: true }
+                )
+            )
+        })
+
+        // Update quantity
+        let updatedQuantity = await Promise.all(updateQuantityMethods)
+
+        // Check quantity
+        if (isEmpty(updatedQuantity) || updatedQuantity.length != data.length) {
+            await abortTransactions(sessions);
+            return res.status(406).json({
+                success: false,
+                error: "out of stock"
+            });
+        }
 
         // Done
         await commitTransactions(sessions);
