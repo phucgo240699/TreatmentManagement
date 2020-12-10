@@ -9,6 +9,45 @@ var busboyBodyParser = require('busboy-body-parser');
 
 const { authenticateToken } = require("./services/authenticationToken")
 
+const webSocketServerPort = 3002;
+const webSocketServer = require('websocket').server;
+const http = require('http');
+const server = http.createServer();
+server.listen(webSocketServerPort);
+console.log('listenning on Port 3002');
+
+const clients = {};
+
+const getUniqueID = ()=>{
+  const s4 = () => Math.floor((1+Math.random()) * 0x10000).toString(16).substring(1);
+  return s4() + s4() + '-' + s4();
+}
+
+const wsServer = new webSocketServer({
+
+  httpServer: server
+});
+
+wsServer.on('request',function (request){
+  var userID = getUniqueID();
+  // console.log((new Date()) + ' Received a nes connection from origin '+ request.origin+'.');
+  const connection = request.accept(null, request.origin);
+  clients[userID] = connection;
+  // console.log("connected: "+ userID + ' in ' + Object.getOwnPropertyNames(clients));
+
+  connection.on('message',function(message){
+    if(message.type === 'utf8'){
+      // console.log('Receive Message: ', message.utf8Data);
+      // var o = JSON.parse(message.utf8Data);
+      // console.log(o.msg)
+      for(key in clients){
+        clients[key].sendUTF(message.utf8Data);
+        // console.log('sent Message to:', clients[key]);
+      }
+    }
+  })
+})
+
 dotenv.config()
 
 const port = process.env.PORT || 3001
