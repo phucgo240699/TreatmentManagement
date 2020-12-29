@@ -2,7 +2,7 @@ const Users = require("../../models/users")
 const { handleBody } = require("./handleBody")
 const { startSession } = require('mongoose')
 // const bcrypt = require("bcrypt");
-const bcrypt = require("bcrypt")
+const bcrypt = require('bcryptjs')
 const { commitTransactions, abortTransactions } = require('../../services/transaction')
 
 const create = async (req, res) => {

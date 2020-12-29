@@ -56,7 +56,7 @@ const create = async (req, res) => {
         let oldPrescriptionBilldetails = await Promise.all(findPrescriptionBilldetailMethods)
 
         let checkExist = false;
-        oldPrescriptionBilldetails.forEach(async e => {
+        oldPrescriptionBilldetails.forEach(e => {
             if (e.length > 1) {
                 checkFail = true
             }
