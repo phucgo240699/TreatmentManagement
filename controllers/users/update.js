@@ -2,7 +2,7 @@ const Users = require('../../models/users')
 const { handleBody } = require('./handleBody')
 const { startSession } = require('mongoose')
 const { commitTransactions, abortTransactions } = require('../../services/transaction')
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 const update = async (req, res) => {
   let sessions = []
   try {
