@@ -3,7 +3,7 @@ const { isEmpty } = require("lodash")
 
 const addPatients = async (req, res) => {
   try {
-    const doc = await Departments.findOne({ _id: req.params.id, isDeleted: false })
+
     const medicalrecordIds = req.body.medicalrecordIds
 
     if (medicalrecordIds === undefined) {
@@ -12,10 +12,9 @@ const addPatients = async (req, res) => {
         error: "Not enough information"
       });
     }
-
+    const doc = await Departments.findOne({ _id: req.params.id, isDeleted: false })
     doc.queue.push(medicalrecordIds)
     await doc.save()
-
 
     const query = { _id: req.params.id, isDeleted: false }
     let docs;
